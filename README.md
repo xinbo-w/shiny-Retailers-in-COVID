@@ -4,7 +4,7 @@
 ![png](https://github.com/xinbo-hubert-wang/shiny-Retailers-in-COVID/blob/main/Dashboard%20-%20Main.png)
 
 ## Overview
-Retailers in COVID is a course project in my first semester of the MSBA program at UMN. 
+**Retailers in COVID** is a course project in my first semester of the MSBA program at UMN. 
 Since COVID-19 brought so much uncertainty in retail traffic, the retailers need to allocate their resources more wisely.
 To help visualize the impact of COVID-19 on the retail industry, my team built this [R-Shiny dashboard](https://xinbo-wang.shinyapps.io/Retailers-in-COVID/) 
 utilizing the data from [Google Mobility](https://www.google.com/covid19/mobility).
