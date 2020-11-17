@@ -26,7 +26,7 @@ This is the R Markdown file that can be knitted to form the R-Shiny dashboard sh
 The green spots on the maps represent the counties that have increased traffic in retailer stores and red spots are ones with decreased traffic, compared to pre-COVID. 
 The size of the spots represents a change in percentage (larger spots = larger change).
 ![png](https://github.com/xinbo-hubert-wang/shiny-Retailers-in-COVID/blob/main/Dashboard%20-%20Main.png)
-As you can see, the map is crowded by spots (counties). To make it easier to read, we built the dashboard with several widgets that can filter data.
+As you can see, the map is crowded by spots (counties). To make it easier to read, we built several widgets that can filter data.
 ### Filter by State
 ![png](https://github.com/xinbo-hubert-wang/shiny-Retailers-in-COVID/blob/main/Dashboard%20-%20CA.png)
 ### Filter by Population Density
