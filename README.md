@@ -4,9 +4,9 @@
 ![png](https://github.com/xinbo-hubert-wang/shiny-Retailers-in-COVID/blob/main/Dashboard%20-%20Main.png)
 
 ## Overview
-Retailers in COVID is a course project in my first semester of MSBA program at UMN. 
-Since COVID-19 brough so much uncertainty in retail traffic, the retailers need to allocate their resources more wisely.
-To help visualize the impact of COVID-19 on the retail industry so as to help resource allocation, my team built this [R-Shiny dashboard](https://xinbo-wang.shinyapps.io/Retailers-in-COVID/) 
+Retailers in COVID is a course project in my first semester of the MSBA program at UMN. 
+Since COVID-19 brought so much uncertainty in retail traffic, the retailers need to allocate their resources more wisely.
+To help visualize the impact of COVID-19 on the retail industry, my team built this [R-Shiny dashboard](https://xinbo-wang.shinyapps.io/Retailers-in-COVID/) 
 utilizing the data from [Google Mobility](https://www.google.com/covid19/mobility).
 
 
@@ -14,19 +14,19 @@ utilizing the data from [Google Mobility](https://www.google.com/covid19/mobilit
 ## Content
 The repository contains three core files.
 ### mobility_data_fetching_preparing.R
-This is the R script that fetches the data from Google platform and make transformations to output the data for our dashboard.
+This is the R script that fetches the data from the Google platform and makes transformations to output the data for our dashboard.
 
 ### data_for_dashboard.csv
-This is the data output by the script and to be visualized in the rmarkdown file.
+This is the data output by the script and to be visualized in the R Markdown file.
 
 ### Retailers-in-COVID.Rmd
-This is the rmarkdown file that can be knitted to form the R-Shiny dashboard shown in the link [R-Shiny dashboard](https://xinbo-wang.shinyapps.io/Retailers-in-COVID/) 
+This is the R Markdown file that can be knitted to form the R-Shiny dashboard shown in the link [R-Shiny dashboard](https://xinbo-wang.shinyapps.io/Retailers-in-COVID/) 
 
 ## How to Use the Dashboard
-The green on the maps represents the counties that has a increased traffic in retailer stores and red spots are ones with increased traffic, compared to pre-COVID. 
-The size of the spots represent change in percentage (larger spots = larger change).
+The green spots on the maps represent the counties that have increased traffic in retailer stores and red spots are ones with decreased traffic, compared to pre-COVID. 
+The size of the spots represents a change in percentage (larger spots = larger change).
 ![png](https://github.com/xinbo-hubert-wang/shiny-Retailers-in-COVID/blob/main/Dashboard%20-%20Main.png)
-As you can see, the map is crowded by spots (counties). The dashboard is built with several widgets that can filter data.
+As you can see, the map is crowded by spots (counties). To make it easier to read, we built the dashboard with several widgets that can filter data.
 ### Filter by State
 ![png](https://github.com/xinbo-hubert-wang/shiny-Retailers-in-COVID/blob/main/Dashboard%20-%20CA.png)
 ### Filter by Population Density
