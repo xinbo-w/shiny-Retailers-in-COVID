@@ -1,0 +1,208 @@
+---
+title: "Curent Retail Visits Level Compared to Pre-COVID 19"
+output: 
+  flexdashboard::flex_dashboard:
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(dplyr)
+library(ggplot2)
+library(maps)
+library(dplyr)
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+city_mob_current <- read.csv('data_for_dashboard.csv')
+city_mob_current <- city_mob_current %>% filter(!is.na(longitude))
+update_time <- first(city_mob_current$date)
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+Data Updated to: **`r update_time`**
+
+
+**Dots** in <font style="color:red">red</font> (<font style="color:green">green</font>) are counties with retail visits <font style="color:red">lower</font> (<font style="color:green">higher</font>) than the inital state -- median level during Jan 3 - Feb 6, 2020;
+
+**Size** of dots indicates relative retail visits change(**%**); 
+
+---
+
+Use the sliders below to **filter** counties and **zoom in/out** on the map:
+
+Total Selected Counties: **`r renderText({
+city_mob_current_plot <- city_mob_current %>%
+  filter(density_log>=input$pop_range[1] & density_log<=input$pop_range[2])
+
+if (length(input$state)>0){
+  city_mob_current_plot <- city_mob_current_plot%>%
+  filter(state %in% input$state)}
+length(city_mob_current_plot$city)})`**
+
+\# with Increased Retail Visits: **`r renderText({
+city_mob_current_plot <- city_mob_current %>%
+  filter(density_log>=input$pop_range[1] & density_log<=input$pop_range[2] &
+  retail_traffic>=0)
+
+if (length(input$state)>0){
+  city_mob_current_plot <- city_mob_current_plot%>%
+  filter(state %in% input$state)}
+length(city_mob_current_plot$city)})`**
+
+\# with Decreased Retail Visits: **`r renderText({
+city_mob_current_plot <- city_mob_current %>%
+  filter(density_log>=input$pop_range[1] & density_log<=input$pop_range[2] &
+  retail_traffic<0)
+
+if (length(input$state)>0){
+  city_mob_current_plot <- city_mob_current_plot%>%
+  filter(state %in% input$state)}
+length(city_mob_current_plot$city)})`**
+
+```{r}
+selectInput("state", label = "Select States",
+            choices=sort(city_mob_current$state), multiple=TRUE)
+sliderInput("pop_range", label = "Population Density (log10) Range",
+            min = floor(min(city_mob_current$density_log)), 
+            max = ceiling(max(city_mob_current$density_log)), 
+            value = c(floor(min(city_mob_current$density_log)),
+                          ceiling(max(city_mob_current$density_log))), step = 0.1)
+sliderInput("long_range", label = "Longitude Range",
+            min = floor(min(city_mob_current$longitude)), 
+            max = ceiling(max(city_mob_current$longitude)), 
+            value = c(-125,
+                          ceiling(max(city_mob_current$longitude))), step = 1)
+sliderInput("lat_range", label = "Latitude Range",
+            min = floor(min(city_mob_current$latitude)), 
+            max = ceiling(max(city_mob_current$latitude)), 
+            value = c(floor(min(city_mob_current$latitude)),
+                          ceiling(max(city_mob_current$latitude))), step = 1)
+```
+
+
+Column
+-----------------------------------------------------------------------
+
+### Visits to Retail Stores Compared to Pre-COVID 19
+Data Source: [Google Mobility](https://www.google.com/covid19/mobility)
+
+```{r}
+m = map_data('state')
+
+renderPlot({
+city_mob_current_plot <- city_mob_current %>%
+  filter(density_log>=input$pop_range[1] & density_log<=input$pop_range[2])
+
+if (length(input$state)>0){
+  city_mob_current_plot <- city_mob_current_plot%>%
+  filter(state %in% input$state)}
+
+city_mob_current_plot <- city_mob_current_plot %>%
+  mutate(Traffic_Direction = ifelse(city_mob_current_plot$retail_traffic<0, 'Decrease', 'Increase'), color = ifelse(city_mob_current_plot$retail_traffic<0, 'Red', 'Dark Green'), ABS_Change = abs(retail_traffic))
+
+xlower <- max(input$long_range[1], min(city_mob_current_plot$longitude))
+xhigher <- min(input$long_range[2], max(city_mob_current_plot$longitude))
+ylower <- max(input$lat_range[1], min(city_mob_current_plot$latitude))
+yhigher <- min(input$lat_range[2], max(city_mob_current_plot$latitude))
+  
+ggplot(data = city_mob_current_plot) + 
+  xlab("Longitude") + 
+  ylab("Latitude") + 
+  geom_polygon(data=m, aes(x=long, y=lat, group=group), 
+               colour="grey", fill="grey98") +
+  geom_point(aes(x=longitude, y=latitude,
+             size=ABS_Change,
+             color=Traffic_Direction),
+             alpha=0.3) +
+  theme_minimal() +
+  geom_text(aes(x=longitude, y=latitude, label=city), 
+            size=2.5, nudge_y=0.05, check_overlap = TRUE) +
+  coord_fixed(ratio = 1, xlim = c(xlower, xhigher), ylim = c(ylower, yhigher)) +
+  scale_colour_manual(values=c("red", "dark green")) +
+  scale_size(range = c(0,7)) +
+  theme(legend.position = 'bottom') +
+  labs(color = "Visits Increase/Decrease",
+       size = "Change in %",
+       caption = "Data souce:https://github.com/GoogleCloudPlatform/covid-19-open-data/")
+}) 
+```
+
+Column {data-width=300}
+-----------------------------------------------------------------------
+
+### Top Counties with Retail Visits Increase
+
+```{r}
+
+#m = map_data('state')
+
+renderPlot({
+  
+
+  
+    city_mob_current_plot <- city_mob_current %>% 
+      filter(density_log>=input$pop_range[1] & density_log<=input$pop_range[2]) %>%
+      arrange(desc(retail_traffic))
+
+
+  
+if (length(input$state)>0){
+      city_mob_current_plot <- city_mob_current_plot%>%
+      filter(state %in% input$state)
+  
+      city_mob_current_plot <- city_mob_current_plot %>% arrange(desc(retail_traffic)) }
+
+      temp = head(city_mob_current_plot %>% filter(retail_traffic>=0), 10)
+
+      ggplot(data = temp, aes(x = reorder(city, retail_traffic), y = retail_traffic)) + 
+      geom_col(position="dodge", stat="identity", fill = 'dark green', width = 0.7 , space = 1) + coord_flip() + 
+      labs( y = "Retail Traffic Change in %") + theme_classic() +
+      theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        axis.line = element_line(),
+        axis.title.y=element_blank(),
+        axis.line.y=element_blank(),
+        axis.text.y=element_text(size=10, face="bold")) + 
+        scale_y_continuous(position = "right")
+  })
+
+
+```
+
+### Top Counties with Retail Visits Decrease
+
+```{r}
+
+renderPlot({
+  
+
+  
+    city_mob_current_plot <- city_mob_current %>% 
+      filter(density_log>=input$pop_range[1] & density_log<=input$pop_range[2]) %>% arrange(desc(retail_traffic))
+
+
+  
+if (length(input$state)>0){
+      city_mob_current_plot <- city_mob_current_plot%>%
+      filter(state %in% input$state)
+  
+      city_mob_current_plot <- city_mob_current_plot %>% arrange(desc(retail_traffic)) }
+
+      temp = tail(city_mob_current_plot %>% filter(retail_traffic<0), 10)
+
+      ggplot(data = temp, aes(x = reorder(city, -retail_traffic), y = retail_traffic)) + scale_y_reverse(position = "right") + 
+      geom_col(position="dodge", stat="identity", fill = 'red', width = 0.7 , space = 1) + coord_flip() + 
+      labs(y = "Retail Traffic Change in %") + theme_classic() +
+      theme(
+            panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+            panel.border = element_blank(),
+            axis.line = element_line(),
+            axis.title.y=element_blank(),
+            axis.line.y=element_blank(),
+            axis.text.y=element_text(size=10, face="bold"))
+  })
+
+
+
+```
