@@ -1,5 +1,5 @@
 # Retailers in COVID [Link](https://xinbo-wang.shinyapps.io/Retailers-in-COVID/) 
->Team members: [Xinbo Wang](https://github.com/xinbo-hubert-wang), Farhad Mughal, Mark Chen, Weizhong Yao
+>Team members: [Xinbo Wang](https://github.com/xinbo-hubert-wang), Farhad Mughal, Mark Chen, [Weizhong Yao](https://github.com/WeizhongYao)
 
 ![png](https://github.com/xinbo-hubert-wang/shiny-Retailers-in-COVID/blob/main/Dashboard%20-%20Main.png)
 
